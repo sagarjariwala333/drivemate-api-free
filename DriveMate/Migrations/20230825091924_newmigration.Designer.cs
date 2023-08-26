@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DriveMate.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20230822115136_somechanges")]
-    partial class somechanges
+    [Migration("20230825091924_newmigration")]
+    partial class newmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,7 +158,6 @@ namespace DriveMate.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Amount")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("CreatedBy")
@@ -167,17 +166,16 @@ namespace DriveMate.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CustomerId")
+                    b.Property<Guid?>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("DestinationAddressId")
+                    b.Property<Guid?>("DestinationAddressId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DriverFeedBack")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("DriverId")
+                    b.Property<Guid?>("DriverId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
@@ -190,20 +188,18 @@ namespace DriveMate.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Otp")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("SourceAddressId")
+                    b.Property<Guid?>("SourceAddressId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("TripEndTime")
+                    b.Property<DateTime?>("TripEndTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TripFeedBack")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("TripStartTime")
+                    b.Property<DateTime?>("TripStartTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TripStatus")

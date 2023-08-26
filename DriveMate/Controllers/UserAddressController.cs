@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DriveMate.Controllers
 {
-    [Authorize]
+
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class UserAddressController : ApiBaseController
+    public class UserAddressController : ControllerBase
     {
         private readonly ILogger<UserController> logger;
         private IUserAddress _userAddress;
@@ -28,7 +28,7 @@ namespace DriveMate.Controllers
         {
             try
             {
-                userAddressRequestDto.UserId = user_unique_id;
+                //userAddressRequestDto.UserId = user_unique_id;
                 var result = await _userAddress.SaveAsync(userAddressRequestDto);
                 return new JsonResponse(200, true, "Success", result);
             }

@@ -8,10 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DriveMate.Controllers
 {
-    [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class AddressController : ApiBaseController
+    public class AddressController : ControllerBase
     {
         private readonly ILogger<UserController> logger;
         private IAddress address;

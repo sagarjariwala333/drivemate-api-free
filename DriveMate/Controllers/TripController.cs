@@ -1,4 +1,5 @@
 ﻿using DriveMate.BaseClass;
+using DriveMate.Entities;
 using DriveMate.Interfaces;
 using DriveMate.Requests.TripRequest;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +20,20 @@ namespace DriveMate.Controllers
             this._tripService = tripService;
         }
 
-        
+        [HttpPost(Name = "AddTrip")]
+        public async Task<JsonResponse> AddTrip(TripRequest tripRequest)
+        {
+            try
+            {
+                var result = await _tripService.SaveAsync(tripRequest);
+                return new JsonResponse(200, true, "Success", result);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResponse(200, true, "Fail", ex.Message);
+            }
+        }
+
+
     }
 }

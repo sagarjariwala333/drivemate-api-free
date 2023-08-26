@@ -11,6 +11,7 @@ using DriveMate.Requests.UserRequest;
 using DriveMate.Responses.UserResponse;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -54,7 +55,7 @@ namespace DriveMate.Services
             {
                 return await _userRepository.Table.Where(x => x.IsDeleted == false).ToListAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -62,9 +63,9 @@ namespace DriveMate.Services
 
         public async Task<LoginResponse> SignIn(LoginRequest loginRequest)
         {
-            var data =await Authenticate(loginRequest);
+            var data = await Authenticate(loginRequest);
 
-            if(data != null)
+            if (data != null)
             {
                 var authClaims = new List<Claim>
                 {
@@ -80,13 +81,13 @@ namespace DriveMate.Services
                     audience: _configuration["JWT:ValidAudience"],
                     expires: DateTime.Now.AddDays(1),
                     claims: authClaims,
-                    signingCredentials: new SigningCredentials(authSigninKey,SecurityAlgorithms.HmacSha256Signature)
+                    signingCredentials: new SigningCredentials(authSigninKey, SecurityAlgorithms.HmacSha256Signature)
                     );
 
                 return new LoginResponse()
                 {
-                    Token=new JwtSecurityTokenHandler().WriteToken(token),
-                    Message="Success",
+                    Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    Message = "Success",
                     status = 1
                 };
             }
@@ -101,8 +102,8 @@ namespace DriveMate.Services
             }
         }
 
-        
-        public async Task<User?> Authenticate(LoginRequest loginRequest) 
+
+        public async Task<User?> Authenticate(LoginRequest loginRequest)
         {
             try
             {
@@ -110,15 +111,15 @@ namespace DriveMate.Services
                             .Where(x => x.Email == loginRequest.Email)
                             .FirstOrDefaultAsync();
 
-                if(passwordHelper.VerifyPassword(loginRequest.Password,data.Password))
+                if (passwordHelper.VerifyPassword(loginRequest.Password, data.Password))
                 {
                     return data;
                 }
 
                 return null;
             }
-            catch(Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
         }
@@ -139,7 +140,7 @@ namespace DriveMate.Services
             userDocument.status = true;
             userDocument.IsDeleted = false;
             userDocument.Type = Path.GetExtension(formFile.FileName);
-            
+
             var result = await _documentService.SaveAsync(userDocument);
         }
 
@@ -163,7 +164,7 @@ namespace DriveMate.Services
                     await dBContext.Users.AddAsync(user);
 
                     IFormFile Profilepic = form.Files[0];
-                    await this.InsertDocument(Profilepic, user.Id.ToString() , (Guid)user.Id);
+                    await this.InsertDocument(Profilepic, user.Id.ToString(), (Guid)user.Id);
                     IFormFile Aadhar = form.Files[1];
                     await this.InsertDocument(Profilepic, signupRequest.AadharNo, (Guid)user.Id);
                     IFormFile Licenece = form.Files[2];
@@ -182,9 +183,38 @@ namespace DriveMate.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);        
+                throw new Exception(ex.Message);
             }
         }
 
+        public async Task<User> UserIdReq(UserIdReq userIdReq)
+        {
+            try
+            {
+                var data = await dBContext.Users.FirstOrDefaultAsync(x => x.Id == userIdReq.Id);
+                return data;
+            }
+            catch (Exception ex)
+            {
+                {
+                    throw new Exception(ex.Message);
+                }
+            }
+        }
+
+        //public Task<User> InsertTrip()
+        //{
+        //    try
+        //    {
+        //        var data = await dBContext.Users.FirstOrDefaultAsync(x => x.Id == userIdReq.Id);
+        //        return data;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        {
+        //            throw new Exception(ex.Message);
+        //        }
+        //    }
+        //}
     }
 }

@@ -12,5 +12,7 @@
         public string? DriverFeedBack { get; set; }
         public string? TripFeedBack { get; set; }
         public char TripStatus { get; set; }
+        public string Amount { get; set; }
+        public string Otp { get; set; }
     }
 }

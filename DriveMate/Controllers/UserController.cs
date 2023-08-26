@@ -39,6 +39,36 @@ namespace DriveMate.Controllers
             }
         }
 
+
+        [HttpPost(Name = "GetUserById")]
+        public async Task<JsonResponse> GetUserById(UserIdReq userIdReq)
+        {
+            try
+            {
+                var result = await userService.UserIdReq(userIdReq);
+                return new JsonResponse(200, true, "Success", result);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResponse(200, true, "Fail", ex.Message);
+            }
+        }
+        
+        //[HttpPost(Name ="InsertTrip")]
+        //public async Task<JsonResponse> InsertTrip()
+        //{
+        //    try
+        //    {
+        //        var result = await userService.InsertTrip();
+        //        return new JsonResponse(200, true, "Success", result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new JsonResponse(200, true, "Fail", ex.Message);
+        //    }
+        //}
+
+
         [HttpPost(Name = "SignIn")]
         public async Task<JsonResponse> SignIn(LoginRequest loginRequest)
         {

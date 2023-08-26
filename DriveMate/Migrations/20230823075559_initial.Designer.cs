@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DriveMate.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20230722124202_Initial")]
-    partial class Initial
+    [Migration("20230823075559_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,7 +27,7 @@ namespace DriveMate.Migrations
 
             modelBuilder.Entity("DriveMate.Entities.Address", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -101,7 +101,7 @@ namespace DriveMate.Migrations
 
             modelBuilder.Entity("DriveMate.Entities.PaymentDetails", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -153,7 +153,7 @@ namespace DriveMate.Migrations
 
             modelBuilder.Entity("DriveMate.Entities.Trip", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -217,7 +217,7 @@ namespace DriveMate.Migrations
 
             modelBuilder.Entity("DriveMate.Entities.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -276,7 +276,7 @@ namespace DriveMate.Migrations
 
             modelBuilder.Entity("DriveMate.Entities.UserAddress", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -308,7 +308,7 @@ namespace DriveMate.Migrations
 
             modelBuilder.Entity("DriveMate.Entities.UserDocument", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
