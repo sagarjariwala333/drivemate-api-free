@@ -5,7 +5,9 @@ using DriveMate.Interfaces;
 using DriveMate.Interfaces.BaseRepository;
 using DriveMate.Requests.TripRequest;
 using DriveMate.Requests.UserRequest;
+using DriveMate.Responses;
 using DriveMate.Responses.Trip;
+using Microsoft.EntityFrameworkCore;
 
 namespace DriveMate.Services
 {
@@ -31,6 +33,37 @@ namespace DriveMate.Services
             this._mapper = mapper;
         }
 
+
+        public async Task<Trip> InsertTripAsync(TripRequest tripRequest)
+        {
+            try
+            {
+                if (tripRequest.Id == null)
+                {
+                    var trip = _mapper.Map<Trip>(tripRequest);
+                    trip.TripStatus = 'R';
+                    await AppDBContext.Trips.AddAsync(trip);
+                    await AppDBContext.SaveChangesAsync();
+                    return trip;
+                }
+                else
+                {
+                    var trip = _mapper.Map<Trip>(tripRequest);
+                    var data = AppDBContext.Trips.FirstOrDefault(x => x.Id == tripRequest.Id);
+                    if(data == null)
+                    {
+                        data = trip;
+                    }
+                    await AppDBContext.SaveChangesAsync();
+                    return trip;
+                }
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<Trip> SaveAsync(Trip trip)
         {
             try
@@ -52,9 +85,41 @@ namespace DriveMate.Services
             }
         }
 
-        public Task<Trip> SaveAsync(TripRequest tripRequest)
+        public async Task<List<RemainTripResponse>> GetRemainTripAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var AllTrips = await AppDBContext.Trips
+                    .Where(x => x.DriverId == null && x.TripStatus == 'R')
+                    .ToListAsync();
+
+                var AllCustomers = await AppDBContext.Users
+                    .Where(x => x.Role == 'C')
+                    .ToListAsync();
+
+                var data = (from trip in AllTrips
+                           join cust in AllCustomers
+                           on trip.CustomerId equals cust.Id
+                           select new RemainTripResponse
+                           {
+                               CustomerId = cust.Id,
+                               CustomerName = cust.FirstName + cust.LastName,
+                               MobileNo = cust.PhoneNo,
+                               TripStartTime = trip.TripStartTime,
+                               Amount = trip.Amount,
+                               TripStatus = trip.TripStatus,
+                               Source = trip.Source,
+                               Destination = trip.Destination,
+                               Distance = trip.Distance,
+                               ExpTime = trip.ExpTime,
+                           }).ToList();
+                
+                return data;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<AddTripAddressResponse> SaveTripAddressAsync(AddTripAddressRequest addTripAddressRequest)
@@ -87,36 +152,10 @@ namespace DriveMate.Services
             }
         }
 
-
-
-        /*public async Task<AddTripResponse> InsertTripAsync(AddTripRequest addTripRequest)
+        public Task<Trip> SaveAsync(TripRequest tripRequest)
         {
-            using (var transaction = AppDBContext.Database.BeginTransaction())
-            {
-                try
-                {
-                    Address address = _mapper.Map<Address>(addTripRequest);
-                    await _addressRepository.InsertAsync(address);
-
-                    UserAddressService userAddress = new UserAddressService()
-                    {
-                        UserId = addTripRequest.UserId,
-                        AddressId = (Guid)address.Id,
-                    };
-                    await _userAddressRepository.InsertAsync(userAddress);
-
-                    Trip trip = _mapper.Map<Trip>(addTripRequest);
-                    await _tripRepository.InsertAsync(trip);
-                    
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw new Exception(ex.Message);
-                }
-            }
-        }*/
-
+            throw new NotImplementedException();
+        }
 
     }
 }

@@ -90,3 +90,4 @@ D:\DriveMate\DriveMate\bin\Debug\net6.0\AutoMapper.dll
 D:\DriveMate\DriveMate\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 D:\DriveMate\DriveMate\bin\Debug\net6.0\Newtonsoft.Json.dll
 D:\DriveMate\DriveMate\bin\Debug\net6.0\DevOne.Security.Cryptography.BCrypt.dll
+D:\DriveMate\DriveMate\bin\Debug\net6.0\System.Web.Cors.dll

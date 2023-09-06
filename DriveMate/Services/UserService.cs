@@ -85,7 +85,12 @@ namespace DriveMate.Services
 
                 return new LoginResponse()
                 {
-                    Token=new JwtSecurityTokenHandler().WriteToken(token),
+                    Role = data.Role,
+                    FirstName = data.FirstName,
+                    LastName = data.LastName,
+                    Email = data.Email,
+                    PhoneNo = data.PhoneNo,
+                    Token =new JwtSecurityTokenHandler().WriteToken(token),
                     Message="Success",
                     status = 1
                 };
@@ -148,7 +153,9 @@ namespace DriveMate.Services
         {
             try
             {
+                //var temp = form.TryGetValue("text");
                 var str = form.ToList()[0].Value;
+                
                 JsonDocument jsonDocument = JsonDocument.Parse(str);
 
                 //JsonDocument Njson = CapitalizeFirstLetter(jsonDocument);
@@ -164,10 +171,18 @@ namespace DriveMate.Services
 
                     IFormFile Profilepic = form.Files[0];
                     await this.InsertDocument(Profilepic, user.Id.ToString() , (Guid)user.Id);
-                    IFormFile Aadhar = form.Files[1];
-                    await this.InsertDocument(Profilepic, signupRequest.AadharNo, (Guid)user.Id);
-                    IFormFile Licenece = form.Files[2];
-                    await this.InsertDocument(Profilepic, signupRequest.LicenceNo, (Guid)user.Id);
+
+                    if (form.Files.Count > 1)
+                    {
+                        IFormFile Aadhar = form.Files[1];
+                        await this.InsertDocument(Profilepic, signupRequest.AadharNo, (Guid)user.Id);
+                    }
+
+                    if (form.Files.Count > 1)
+                    {
+                        IFormFile Licenece = form.Files[2];
+                        await this.InsertDocument(Profilepic, signupRequest.LicenceNo, (Guid)user.Id);
+                    }
 
                     await dBContext.SaveChangesAsync();
                     return user;

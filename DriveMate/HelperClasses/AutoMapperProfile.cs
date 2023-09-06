@@ -24,6 +24,9 @@ namespace DriveMate.HelperClasses
 
             CreateMap<UserDocument, UploadDocumentRequest>();
             CreateMap<UploadDocumentRequest, UserDocument>();
+
+            CreateMap<Trip,TripRequest>();
+            CreateMap<TripRequest,Trip>();
         }
     }
 }
