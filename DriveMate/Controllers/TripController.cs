@@ -1,5 +1,6 @@
 ﻿using DriveMate.BaseClass;
 using DriveMate.Entities;
+using DriveMate.HelperClasses;
 using DriveMate.Interfaces;
 using DriveMate.Requests.TripRequest;
 using Microsoft.AspNetCore.Http;
@@ -34,8 +35,12 @@ namespace DriveMate.Controllers
                     tripRequest.DriverId = user_unique_id;
                 }
 
-                var result = await _tripService.InsertTripAsync(tripRequest);
+                var result = await _tripService.InsertTripAsync(tripRequest, user_unique_id);
                 return new JsonResponse(200, true, "Success", result);
+            }
+            catch(BookedTripsLimitException btlex)
+            {
+                return new JsonResponse(200, true, "Limit exceed", btlex.Message);
             }
             catch (Exception ex)
             {
@@ -49,6 +54,81 @@ namespace DriveMate.Controllers
             try
             {
                 var result = await _tripService.GetRemainTripAsync();
+                return new JsonResponse(200, true, "Success", result);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResponse(200, true, "Fail", ex.Message);
+            }
+        }
+
+        [HttpPost(Name = "AcceptTrip")]
+        public async Task<JsonResponse> AcceptTripAsync(AcceptTripRequest acceptTripRequest)
+        {
+            try
+            {
+                //tripRequest.DriverId = user_unique_id;
+                var result = await _tripService.DriverAcceptTripAsync((Guid)acceptTripRequest.Id, user_unique_id);
+                return new JsonResponse(200, true, "Success", result);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResponse(200, true, "Fail", ex.Message);
+            }
+        }
+
+        [HttpGet(Name = "ViewBookedTrip")]
+        public async Task<JsonResponse> ViewBookedTrip()
+        {
+            try
+            {
+                //tripRequest.DriverId = user_unique_id;
+                var result = await _tripService.ViewBookedTrips(user_unique_id);
+                return new JsonResponse(200, true, "Success", result);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResponse(200, true, "Fail", ex.Message);
+            }
+        }
+
+        /*[HttpGet(Name = "CustomerViewBookedTrip")]
+        public async Task<JsonResponse> CustomerViewBookedTrip()
+        {
+            try
+            {
+                //tripRequest.DriverId = user_unique_id;
+                var result = await _tripService.CustomerViewBookedTrips(user_unique_id);
+                return new JsonResponse(200, true, "Success", result);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResponse(200, true, "Fail", ex.Message);
+            }
+        }*/
+
+        [HttpPost(Name = "StartTrip")]
+        public async Task<JsonResponse> StartTrip(StartTripRequest startTripRequest)
+        {
+            try
+            {
+                //tripRequest.DriverId = user_unique_id;
+                var result = await _tripService.StartTrip(startTripRequest.Id);
+                return new JsonResponse(200, true, "Success", result);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResponse(200, true, "Fail", ex.Message);
+            }
+        }
+
+        [HttpPost(Name = "EndTrip")]
+        public async Task<JsonResponse> EndTrip(EndTripRequest endTripRequest)
+        {
+            try
+            {
+                //tripRequest.DriverId = user_unique_id;
+                var result = await _tripService.EndTrip(endTripRequest.Id);
                 return new JsonResponse(200, true, "Success", result);
             }
             catch (Exception ex)

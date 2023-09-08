@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DriveMate.Context;
 using DriveMate.Entities;
+using DriveMate.HelperClasses;
 using DriveMate.Interfaces;
 using DriveMate.Interfaces.BaseRepository;
 using DriveMate.Requests.TripRequest;
@@ -8,6 +9,7 @@ using DriveMate.Requests.UserRequest;
 using DriveMate.Responses;
 using DriveMate.Responses.Trip;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 
 namespace DriveMate.Services
 {
@@ -34,10 +36,18 @@ namespace DriveMate.Services
         }
 
 
-        public async Task<Trip> InsertTripAsync(TripRequest tripRequest)
+        public async Task<Trip> InsertTripAsync(TripRequest tripRequest, Guid Id)
         {
+            
             try
             {
+                var cont = await AppDBContext.Trips.Where(x => x.CustomerId == Id && x.TripStatus == 'R').CountAsync();
+
+                if (cont > 1)
+                {
+                    throw new BookedTripsLimitException("One trip already booked");
+                }
+
                 if (tripRequest.Id == null)
                 {
                     var trip = _mapper.Map<Trip>(tripRequest);
@@ -58,9 +68,13 @@ namespace DriveMate.Services
                     return trip;
                 }
             }
+            catch(BookedTripsLimitException btlx)
+            {
+                throw;
+            }
             catch(Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
 
@@ -102,6 +116,7 @@ namespace DriveMate.Services
                            on trip.CustomerId equals cust.Id
                            select new RemainTripResponse
                            {
+                               Id = (Guid)trip.Id,
                                CustomerId = cust.Id,
                                CustomerName = cust.FirstName + cust.LastName,
                                MobileNo = cust.PhoneNo,
@@ -155,6 +170,92 @@ namespace DriveMate.Services
         public Task<Trip> SaveAsync(TripRequest tripRequest)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Trip> DriverAcceptTripAsync(Guid TripId, Guid DriverId)
+        {
+            var data = await AppDBContext.Trips.FirstOrDefaultAsync(x => x.Id == TripId);
+            if (data != null)
+            {
+                data.DriverId = DriverId;
+                data.TripStatus = 'B';
+                data.Otp = "1234";
+            }
+            await AppDBContext.SaveChangesAsync();
+            return data;
+        }
+
+        public async Task<List<BookedTrips>> ViewBookedTrips(Guid Id)
+        {
+            try
+            {
+                
+                var data = await (from trip in AppDBContext.Trips
+                                  join user in AppDBContext.Users
+                                  on trip.CustomerId equals user.Id
+                                  where trip.TripStatus == 'R' && trip.CustomerId == Id
+                                  select new BookedTrips
+                                  {
+                                      Id = (Guid)trip.Id,
+                                      Source = trip.Source,
+                                      Destination = trip.Destination,
+                                      Otp = trip.Otp
+                                  })
+                            .ToListAsync();
+                return data;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("");
+            }
+
+        }
+
+        /*public async Task<List<BookedTrips>> CustomerViewBookedTrips(Guid Id)
+        {
+            var data = await (from trip in AppDBContext.Trips
+                              join user in AppDBContext.Users
+                              on trip.CustomerId equals user.Id
+                              where trip.TripStatus == 'R' && trip.CustomerId == Id
+                              select new BookedTrips
+                              {
+                                  Id = (Guid)trip.Id,
+                                  Source = trip.Source,
+                                  Destination = trip.Destination,
+                                  MobileNo = user.PhoneNo,
+                                  DriverId = (Guid)trip.DriverId,
+                                  DriverName = user.FirstName + user.LastName,
+                                  Otp = trip.Otp
+                              })
+                        .ToListAsync();
+
+            return data;
+        }*/
+
+        public async Task<Trip> StartTrip(Guid Id)
+        {
+            var data = await AppDBContext.Trips.FirstOrDefaultAsync(x => x.Id == Id);
+
+            if (data != null)
+            {
+                data.TripStatus = 'A';
+            }
+
+            await AppDBContext.SaveChangesAsync();
+            return data;
+        }
+
+        public async Task<Trip> EndTrip(Guid Id)
+        {
+            var data = await AppDBContext.Trips.FirstOrDefaultAsync(x => x.Id == Id);
+
+            if (data != null)
+            {
+                data.TripStatus = 'C';
+            }
+
+            await AppDBContext.SaveChangesAsync();
+            return data;
         }
 
     }

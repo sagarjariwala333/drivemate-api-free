@@ -2,6 +2,7 @@
 {
     public class RemainTripResponse
     {
+        public Guid Id { get; set; }
         public Guid? CustomerId { get; set; }
         public string? CustomerName { get; set; }
         public string? MobileNo { get; set; }
