@@ -25,7 +25,7 @@ builder.Services.AddDbContext<AppDBContext>((serviceProvider, dbContextBuilder) 
 {
     var ConnectionString = builder.Configuration.GetConnectionString("Default");
     dbContextBuilder.UseSqlServer(ConnectionString);
-});
+}); 
 
 builder.Services.AddCors(options =>
 {
@@ -40,6 +40,8 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
+
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
@@ -74,6 +76,7 @@ builder.Services.AddScoped<IAddress, AddressService>();
 builder.Services.AddScoped<IUserAddress, UserAddressService>();
 builder.Services.AddScoped<IPasswordHelper, PasswordHelper>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -89,6 +92,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JWT:Secret"]))
     };
+});
+
+builder.Services.AddSignalR(options =>
+{
+    options.KeepAliveInterval = TimeSpan.FromSeconds(15);
 });
 
 
@@ -113,3 +121,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

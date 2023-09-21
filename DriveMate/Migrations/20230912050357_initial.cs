@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DriveMate.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -67,17 +67,21 @@ namespace DriveMate.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DriverId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SourceAddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DestinationAddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TripStartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TripEndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Amount = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DriverFeedBack = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TripFeedBack = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Otp = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TripStatus = table.Column<string>(type: "nvarchar(1)", nullable: false),
+                    DriverId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SourceAddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DestinationAddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    TripStartTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TripEndTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Amount = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DriverFeedBack = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TripFeedBack = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Otp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TripStatus = table.Column<string>(type: "nvarchar(1)", nullable: true),
+                    Source = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Destination = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Distance = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExpTime = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),

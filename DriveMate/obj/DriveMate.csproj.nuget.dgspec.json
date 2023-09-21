@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DriveMate\\DriveMate\\DriveMate.csproj": {}
+    "C:\\drivemateapi\\drivemate-api-free\\DriveMate\\DriveMate.csproj": {}
   },
   "projects": {
-    "D:\\DriveMate\\DriveMate\\DriveMate.csproj": {
+    "C:\\drivemateapi\\drivemate-api-free\\DriveMate\\DriveMate.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DriveMate\\DriveMate\\DriveMate.csproj",
+        "projectUniqueName": "C:\\drivemateapi\\drivemate-api-free\\DriveMate\\DriveMate.csproj",
         "projectName": "DriveMate",
-        "projectPath": "D:\\DriveMate\\DriveMate\\DriveMate.csproj",
-        "packagesPath": "C:\\Users\\Sujan\\.nuget\\packages\\",
-        "outputPath": "D:\\DriveMate\\DriveMate\\obj\\",
+        "projectPath": "C:\\drivemateapi\\drivemate-api-free\\DriveMate\\DriveMate.csproj",
+        "packagesPath": "C:\\Users\\Yuvrajsinh\\.nuget\\packages\\",
+        "outputPath": "C:\\drivemateapi\\drivemate-api-free\\DriveMate\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Sujan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Yuvrajsinh\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -59,6 +59,10 @@
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[6.0.20, )"
+            },
+            "Microsoft.AspNetCore.SignalR": {
+              "target": "Package",
+              "version": "[1.1.0, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -106,7 +110,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }

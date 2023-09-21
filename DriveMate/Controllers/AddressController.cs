@@ -37,7 +37,7 @@ namespace DriveMate.Controllers
         }
 
         [HttpPost(Name = "Add")]
-        public async Task<JsonResponse> Add(AddressModal addressModal)
+        public async Task<JsonResponse> Add(Requests.TripRequest.AddressModal addressModal)
         {
             try
             {

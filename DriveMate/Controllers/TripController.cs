@@ -2,6 +2,7 @@
 using DriveMate.Entities;
 using DriveMate.HelperClasses;
 using DriveMate.Interfaces;
+using DriveMate.Requests;
 using DriveMate.Requests.TripRequest;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

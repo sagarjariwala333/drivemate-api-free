@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DriveMate.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20230722124202_Initial")]
-    partial class Initial
+    [Migration("20230912050357_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,7 +27,7 @@ namespace DriveMate.Migrations
 
             modelBuilder.Entity("DriveMate.Entities.Address", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -101,7 +101,7 @@ namespace DriveMate.Migrations
 
             modelBuilder.Entity("DriveMate.Entities.PaymentDetails", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -153,12 +153,11 @@ namespace DriveMate.Migrations
 
             modelBuilder.Entity("DriveMate.Entities.Trip", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Amount")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("CreatedBy")
@@ -167,18 +166,26 @@ namespace DriveMate.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CustomerId")
+                    b.Property<Guid?>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("DestinationAddressId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("DriverFeedBack")
-                        .IsRequired()
+                    b.Property<string>("Destination")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("DriverId")
+                    b.Property<Guid?>("DestinationAddressId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Distance")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DriverFeedBack")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("DriverId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ExpTime")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -190,24 +197,24 @@ namespace DriveMate.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Otp")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("SourceAddressId")
+                    b.Property<string>("Source")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("SourceAddressId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("TripEndTime")
+                    b.Property<DateTime?>("TripEndTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TripFeedBack")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("TripStartTime")
+                    b.Property<DateTime?>("TripStartTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TripStatus")
-                        .IsRequired()
                         .HasColumnType("nvarchar(1)");
 
                     b.HasKey("Id");
@@ -217,7 +224,7 @@ namespace DriveMate.Migrations
 
             modelBuilder.Entity("DriveMate.Entities.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -276,7 +283,7 @@ namespace DriveMate.Migrations
 
             modelBuilder.Entity("DriveMate.Entities.UserAddress", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -308,7 +315,7 @@ namespace DriveMate.Migrations
 
             modelBuilder.Entity("DriveMate.Entities.UserDocument", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
