@@ -11,15 +11,18 @@ namespace DriveMate.Services
     {
         private readonly IRepository<DriveMate.Entities.Trip> _tripRepository;
         private readonly IRepository<User> _userRepository;
+        private readonly IRepository<UserDocument> _documentRepository;
 
         public AdminService(IRepository<Trip> TripRepository,
-            IRepository<User> UserRepository)
+            IRepository<User> UserRepository,
+            IRepository<UserDocument> DocumentRepository)
         {
             _tripRepository = TripRepository;
             _userRepository = UserRepository;
+            _documentRepository = DocumentRepository;
         }
 
-        public async Task<JsonResponse> GetAllTrips()
+        public async Task<JsonResponse> GetAllTrips(Guid UserId)
         {
             try
             {
@@ -28,6 +31,10 @@ namespace DriveMate.Services
                                   on trip.CustomerId equals user.Id
                                   join driver in _userRepository.Table.Where(x => x.IsDeleted == false)
                                   on trip.DriverId equals driver.Id
+                                  where 
+                                  ((UserId.ToString().ToLower() != "6CE75E35-FE61-442C-C2D9-08DBBB3133E1".ToLower()) ? 
+                                  (trip.CustomerId == UserId || trip.DriverId == UserId) : true) && 
+                                  trip.TripStatus.ToString().ToLower() == "c"                              
                                   select new
                                   {
                                       DriverName = driver.FirstName + " " + driver.LastName,
@@ -84,14 +91,51 @@ namespace DriveMate.Services
 
         public async Task<JsonResponse> GetUserById(Guid Id)
         {
+            var Trips = await _tripRepository.Table.Where(x => x.IsDeleted == false && 
+            (x.DriverId == Id || x.CustomerId == Id) && 
+            x.TripStatus.ToString().ToLower() == "c").ToListAsync();
+
+            var totalTrips = Trips.Count();
+            var totalAmount = Trips.Select(x => int.Parse(x.Amount)).Sum();
+            var totalCustomers = Trips.Select(x => x.CustomerId).Distinct().Count();
+
+            var totalDistance = 0.0;
+
+            foreach (var item in Trips)
+            {
+                totalDistance+= float.Parse(item.Distance.Split()[0]);
+            }
+
+
             try
             {
+                var d = 
+                        (from user in _userRepository.Table.Where(x => x.IsDeleted == false).ToList()
+                         join photo in _documentRepository.Table.Where(x => x.IsDeleted == false).ToList()
+                         on user.Id equals photo.UserId
+                         where user.Id == Id && photo.Type.ToLower() != ".pdf"
+                         select new
+                         {
+                             FirstName = user.FirstName,
+                             LastName = user.LastName,
+                             Email = user.Email,
+                             PhoneNo = user.PhoneNo,
+                             Data = photo.FileDate,
+                             Name = photo.Name,
+                             Type = photo.Type,
+                             TotalTrips = totalTrips,
+                             TotalCustomers = totalCustomers,
+                             TotalDistance = totalDistance,
+                             TotalAmount = totalAmount,
+                             Role = user.Role
+                         }).FirstOrDefault();
+
                 var data = await _userRepository.Table.
                     Where(x => x.IsDeleted == false &&
                     x.Id == Id)
                     .FirstOrDefaultAsync();
 
-                return new JsonResponse(200, true, "Success", data);
+                return new JsonResponse(200, true, "Success", d);
             }
             catch (Exception ex)
             {

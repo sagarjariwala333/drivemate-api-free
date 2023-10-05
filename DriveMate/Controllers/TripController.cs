@@ -1,4 +1,5 @@
-﻿using DriveMate.BaseClass;
+﻿using AutoMapper;
+using DriveMate.BaseClass;
 using DriveMate.Entities;
 using DriveMate.HelperClasses;
 using DriveMate.Interfaces;
@@ -6,6 +7,7 @@ using DriveMate.Requests;
 using DriveMate.Requests.TripRequest;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DriveMate.Controllers
 {
@@ -137,6 +139,7 @@ namespace DriveMate.Controllers
                 return new JsonResponse(200, true, "Fail", ex.Message);
             }
         }
+        
 
 
     }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DriveMate.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20230912050357_initial")]
-    partial class initial
+    [Migration("20230922055340_first")]
+    partial class first
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DriveMate.BaseClass;
 using DriveMate.Context;
 using DriveMate.Entities;
 using DriveMate.HelperClasses;
@@ -35,6 +36,7 @@ namespace DriveMate.Services
             this._mapper = mapper;
         }
 
+        
 
         public async Task<Trip> InsertTripAsync(TripRequest tripRequest, Guid Id)
         {
