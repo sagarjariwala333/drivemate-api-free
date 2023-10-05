@@ -1,7 +1,9 @@
-﻿using DriveMate.BaseClass;
+﻿using AutoMapper;
+using DriveMate.BaseClass;
 using DriveMate.Entities;
 using DriveMate.Interfaces;
 using DriveMate.Interfaces.BaseRepository;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
@@ -11,15 +13,18 @@ namespace DriveMate.Services
     {
         private readonly IRepository<DriveMate.Entities.Trip> _tripRepository;
         private readonly IRepository<User> _userRepository;
+        private readonly IRepository<UserDocument> _documentRepository;
 
         public AdminService(IRepository<Trip> TripRepository,
-            IRepository<User> UserRepository)
+            IRepository<User> UserRepository,
+            IRepository<UserDocument> DocumentRepository)
         {
             _tripRepository = TripRepository;
             _userRepository = UserRepository;
+            _documentRepository = DocumentRepository;
         }
 
-        public async Task<JsonResponse> GetAllTrips()
+        public async Task<JsonResponse> GetAllTrips(Guid UserId)
         {
             try
             {
@@ -28,6 +33,10 @@ namespace DriveMate.Services
                                   on trip.CustomerId equals user.Id
                                   join driver in _userRepository.Table.Where(x => x.IsDeleted == false)
                                   on trip.DriverId equals driver.Id
+                                  where
+                                  ((UserId.ToString().ToLower() != "6CE75E35-FE61-442C-C2D9-08DBBB3133E1".ToLower()) ?
+                                  (trip.CustomerId == UserId || trip.DriverId == UserId) : true) &&
+                                  trip.TripStatus.ToString().ToLower() == "c"
                                   select new
                                   {
                                       DriverName = driver.FirstName + " " + driver.LastName,
@@ -44,7 +53,7 @@ namespace DriveMate.Services
             catch (Exception ex)
             {
                 throw;
-            } 
+            }
         }
 
         public async Task<JsonResponse> GetTripsById(Guid Id)
@@ -55,7 +64,7 @@ namespace DriveMate.Services
                                   join user in _userRepository.Table.Where(x => x.IsDeleted == false)
                                   on trip.CustomerId equals user.Id
                                   where trip.Id == Id
-                                  select trip).FirstOrDefaultAsync();   
+                                  select trip).FirstOrDefaultAsync();
 
                 return new JsonResponse(200, true, "Success", data);
             }
@@ -65,39 +74,109 @@ namespace DriveMate.Services
             }
         }
 
-        public async Task<JsonResponse> GetAllUsers(string Role)
+        public async Task<JsonResponse> GetAllUsers(string filterOn = null, string filterQuery = null, string sortBy = null, bool isAscending = true, string Role = null)
         {
             try
             {
-                var data = await _userRepository.Table.
-                    Where(x => x.IsDeleted == false &&
-                    x.Role.ToString().ToLower() == Role.ToLower())
-                    .ToListAsync();
+                var query = _userRepository.Table.Where(x => x.IsDeleted == false);
 
-                return new JsonResponse(200, true, "Success",data);
+                // Filter by role if role is provided
+                if (!string.IsNullOrWhiteSpace(Role))
+                {
+                    query = query.Where(x => x.Role.ToString().ToLower() == Role.ToLower());
+                }
+
+                if (!string.IsNullOrWhiteSpace(filterOn) && !string.IsNullOrWhiteSpace(filterQuery))
+                {
+                    if (filterOn.Equals("FirstName", StringComparison.OrdinalIgnoreCase))
+                    {
+                        query = query.Where(x => x.FirstName.Contains(filterQuery));
+                    }
+                    else if (filterOn.Equals("LastName", StringComparison.OrdinalIgnoreCase))
+                    {
+                        query = query.Where(x => x.LastName.Contains(filterQuery));
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(sortBy))
+                {
+                    if (sortBy.Equals("FirstName", StringComparison.OrdinalIgnoreCase))
+                    {
+                        query = isAscending ? query.OrderBy(x => x.FirstName) : query.OrderByDescending(x => x.FirstName);
+                    }
+                    else if (sortBy.Equals("LastName", StringComparison.OrdinalIgnoreCase))
+                    {
+                        query = isAscending ? query.OrderBy(x => x.LastName) : query.OrderByDescending(x => x.LastName);
+                    }
+                }
+
+                var data = await query.ToListAsync();
+                return new JsonResponse(200, true, "Success", data);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw;
             }
         }
 
+
         public async Task<JsonResponse> GetUserById(Guid Id)
         {
+            var Trips = await _tripRepository.Table.Where(x => x.IsDeleted == false &&
+            (x.DriverId == Id || x.CustomerId == Id) &&
+            x.TripStatus.ToString().ToLower() == "c").ToListAsync();
+
+            var totalTrips = Trips.Count();
+            var totalAmount = Trips.Select(x => int.Parse(x.Amount)).Sum();
+            var totalCustomers = Trips.Select(x => x.CustomerId).Distinct().Count();
+
+            var totalDistance = 0.0;
+
+            foreach (var item in Trips)
+            {
+                totalDistance += float.Parse(item.Distance.Split()[0]);
+            }
+
+
             try
             {
+                var d =
+                        (from user in _userRepository.Table.Where(x => x.IsDeleted == false).ToList()
+                         join photo in _documentRepository.Table.Where(x => x.IsDeleted == false).ToList()
+                         on user.Id equals photo.UserId
+                         where user.Id == Id && photo.Type.ToLower() != ".pdf"
+                         select new
+                         {
+                             FirstName = user.FirstName,
+                             LastName = user.LastName,
+                             Email = user.Email,
+                             PhoneNo = user.PhoneNo,
+                             Data = photo.FileDate,
+                             Name = photo.Name,
+                             Type = photo.Type,
+                             TotalTrips = totalTrips,
+                             TotalCustomers = totalCustomers,
+                             TotalDistance = totalDistance,
+                             TotalAmount = totalAmount,
+                             Role = user.Role
+                         }).FirstOrDefault();
+
                 var data = await _userRepository.Table.
                     Where(x => x.IsDeleted == false &&
                     x.Id == Id)
                     .FirstOrDefaultAsync();
 
-                return new JsonResponse(200, true, "Success", data);
+                return new JsonResponse(200, true, "Success", d);
             }
             catch (Exception ex)
             {
                 throw;
             }
         }
+        
 
     }
-}
+
+
+    }
+

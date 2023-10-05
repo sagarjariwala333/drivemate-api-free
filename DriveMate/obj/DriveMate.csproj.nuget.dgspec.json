@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\drivemateapi\\drivemate-api-free\\DriveMate\\DriveMate.csproj": {}
+    "C:\\Users\\Viraj Jebaliya\\source\\repos\\sagarjariwala333\\drivemate-api-free\\drivemate-api-free\\DriveMate\\DriveMate.csproj": {}
   },
   "projects": {
-    "C:\\drivemateapi\\drivemate-api-free\\DriveMate\\DriveMate.csproj": {
+    "C:\\Users\\Viraj Jebaliya\\source\\repos\\sagarjariwala333\\drivemate-api-free\\drivemate-api-free\\DriveMate\\DriveMate.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\drivemateapi\\drivemate-api-free\\DriveMate\\DriveMate.csproj",
+        "projectUniqueName": "C:\\Users\\Viraj Jebaliya\\source\\repos\\sagarjariwala333\\drivemate-api-free\\drivemate-api-free\\DriveMate\\DriveMate.csproj",
         "projectName": "DriveMate",
-        "projectPath": "C:\\drivemateapi\\drivemate-api-free\\DriveMate\\DriveMate.csproj",
-        "packagesPath": "C:\\Users\\Yuvrajsinh\\.nuget\\packages\\",
-        "outputPath": "C:\\drivemateapi\\drivemate-api-free\\DriveMate\\obj\\",
+        "projectPath": "C:\\Users\\Viraj Jebaliya\\source\\repos\\sagarjariwala333\\drivemate-api-free\\drivemate-api-free\\DriveMate\\DriveMate.csproj",
+        "packagesPath": "C:\\Users\\Viraj Jebaliya\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Viraj Jebaliya\\source\\repos\\sagarjariwala333\\drivemate-api-free\\drivemate-api-free\\DriveMate\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Yuvrajsinh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Viraj Jebaliya\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.306\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -110,7 +111,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     }

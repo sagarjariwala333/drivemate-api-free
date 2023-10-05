@@ -28,7 +28,8 @@ namespace DriveMate.Controllers
         {
             try
             {
-                return await _adminService.GetAllTrips();
+                Guid Id = user_unique_id;
+                return await _adminService.GetAllTrips(Id);
             }
             catch (Exception ex)
             {
@@ -54,13 +55,14 @@ namespace DriveMate.Controllers
         {
             try
             {
-                return await _adminService.GetAllUsers(req.Role);
+                return await _adminService.GetAllUsers(req.FilterOn, req.FilterQuery, req.SortBy, req.IsAscending, req.Role);
             }
             catch (Exception ex)
             {
                 return new JsonResponse(200, true, "Fail", ex.Message);
             }
         }
+
 
         [HttpPost(Name = "GetUserById")]
         public async Task<JsonResponse> GetUserById(UserByIdRequest req)
@@ -74,5 +76,20 @@ namespace DriveMate.Controllers
                 return new JsonResponse(200, true, "Fail", ex.Message);
             }
         }
+
+        [HttpPost(Name = "GetUserByIdProfile")]
+        public async Task<JsonResponse> GetUserByIdProfile(UserByIdRequest req)
+        {
+            try
+            {
+                req.Id = user_unique_id;
+                return await _adminService.GetUserById(req.Id);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResponse(200, true, "Fail", ex.Message);
+            }
+        }
+       
     }
 }

@@ -13,8 +13,11 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using DriveMate.HelperClasses.Interfaces;
 using DriveMate.HelperClasses;
+using DriveMate.Hubs;  
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSignalR(); //2nd before builder.build
 
 // Add services to the container.
 
@@ -94,10 +97,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
-builder.Services.AddSignalR(options =>
-{
-    options.KeepAliveInterval = TimeSpan.FromSeconds(15);
-});
 
 
 
@@ -119,6 +118,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<ChatHub>("/chatHub"); //3rd giving endpoint
 
 app.Run();
 
