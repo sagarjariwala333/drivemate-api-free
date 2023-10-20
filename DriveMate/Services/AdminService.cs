@@ -130,45 +130,8 @@ namespace DriveMate.Services
 
         public async Task<JsonResponse> GetUserById(Guid Id)
         {
-            var Trips = await _tripRepository.Table.Where(x => x.IsDeleted == false &&
-            (x.DriverId == Id || x.CustomerId == Id) &&
-            x.TripStatus.ToString().ToLower() == "c").ToListAsync();
-
-            var totalTrips = Trips.Count();
-            var totalAmount = Trips.Select(x => int.Parse(x.Amount)).Sum();
-            var totalCustomers = Trips.Select(x => x.CustomerId).Distinct().Count();
-
-            var totalDistance = 0.0;
-
-            foreach (var item in Trips)
-            {
-                totalDistance += float.Parse(item.Distance.Split()[0]);
-            }
-
-
             try
             {
-                var d =
-                        (from user in _userRepository.Table.Where(x => x.IsDeleted == false).ToList()
-                         join photo in _documentRepository.Table.Where(x => x.IsDeleted == false).ToList()
-                         on user.Id equals photo.UserId
-                         where user.Id == Id && photo.Type.ToLower() != ".pdf"
-                         select new
-                         {
-                             FirstName = user.FirstName,
-                             LastName = user.LastName,
-                             Email = user.Email,
-                             PhoneNo = user.PhoneNo,
-                             Data = photo.FileDate,
-                             Name = photo.Name,
-                             Type = photo.Type,
-                             TotalTrips = totalTrips,
-                             TotalCustomers = totalCustomers,
-                             TotalDistance = totalDistance,
-                             TotalAmount = totalAmount,
-                             Role = user.Role
-                         }).FirstOrDefault();
-
                 var data = await _userRepository.Table.
                     Where(x => x.IsDeleted == false &&
                     x.Id == Id)
