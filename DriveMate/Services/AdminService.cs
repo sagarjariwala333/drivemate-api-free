@@ -80,7 +80,7 @@ namespace DriveMate.Services
             {
                 var query = _userRepository.Table.Where(x => x.IsDeleted == false);
 
-                // Filter by role if role is provided
+                // Filter by role 
                 if (!string.IsNullOrWhiteSpace(Role))
                 {
                     query = query.Where(x => x.Role.ToString().ToLower() == Role.ToLower());
@@ -95,6 +95,14 @@ namespace DriveMate.Services
                     else if (filterOn.Equals("LastName", StringComparison.OrdinalIgnoreCase))
                     {
                         query = query.Where(x => x.LastName.Contains(filterQuery));
+                    }
+                    else if (filterOn.Equals("Email", StringComparison.OrdinalIgnoreCase))
+                    {
+                        query = query.Where(x => x.Email.Contains(filterQuery));
+                    }
+                    else if (filterOn.Equals("PhoneNo", StringComparison.OrdinalIgnoreCase))
+                    {
+                        query = query.Where(x => x.PhoneNo.Contains(filterQuery));
                     }
                 }
 
