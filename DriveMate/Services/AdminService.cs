@@ -96,6 +96,14 @@ namespace DriveMate.Services
                     {
                         query = query.Where(x => x.LastName.Contains(filterQuery));
                     }
+                    else if (filterOn.Equals("Email", StringComparison.OrdinalIgnoreCase))
+                    {
+                        query = query.Where(x => x.Email.Contains(filterQuery));
+                    }
+                    else if (filterOn.Equals("PhoneNo", StringComparison.OrdinalIgnoreCase))
+                    {
+                        query = query.Where(x => x.PhoneNo.Contains(filterQuery));
+                    }
                 }
 
                 if (!string.IsNullOrWhiteSpace(sortBy))
