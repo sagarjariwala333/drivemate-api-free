@@ -181,10 +181,77 @@ namespace DriveMate.Services
                 throw;
             }
         }
-        
+
+        public async Task<JsonResponse> GetReport(DateTime specificDate)
+        {
+            try
+            {
+                var startOfDay = specificDate.Date;
+                var endOfDay = specificDate.Date.AddHours(23).AddMinutes(59).AddSeconds(59); 
+
+                var d = await
+                        (from trip in _tripRepository.Table.Where(x => x.IsDeleted == false && x.CreatedDate >= startOfDay && x.CreatedDate <= endOfDay)
+                         join
+                        user in _userRepository.Table.Where(x => x.IsDeleted == false)
+                        on trip.DriverId equals user.Id
+                         select new
+                         {
+                             Id = user.Id,
+                             Email = user.Email,
+                             Distance = float.Parse(trip.Distance.Split()[0]),
+                             Name = user.FirstName + " " + user.LastName
+
+                         }).ToListAsync();
+
+                var newdata = d.GroupBy(x => x.Id)
+                    .Select(group => new
+                    {
+                        Id = group.Key,
+                        Distance = group.Sum(g => g.Distance),
+                        Email = group.Select(g => g.Email).FirstOrDefault(),
+                        Name = group.Select(g => g.Name).FirstOrDefault()
+                    }).ToList();
+
+                //var dataFromDatabase = await _tripRepository.Table
+                //    .Where(x => x.IsDeleted == false && x.TripStatus.ToString().ToLower() == "c")
+                //    .GroupBy(x => x.DriverId)
+                //    .Select(group => new
+                //    {
+                //        Id = group.Key,
+                //        Distances = group.Select(x => x.Distance)
+                //    }).ToListAsync();
+
+                //var data = dataFromDatabase
+                //    .Select(item => new
+                //    {
+                //        Id = item.Id,
+                //        Distance = item.Distances.Sum(distanceString =>
+                //        {
+                //            if (distanceString != null)
+                //            {
+                //                var numericPart = distanceString.Split(' ')[0];
+                //                if (long.TryParse(numericPart, out long distanceValue))
+                //                {
+                //                    return distanceValue;
+                //                }
+                //            }
+                //            return 0;
+                //        })
+                //    }).ToList();
+
+                return new JsonResponse(200, true, "Success", newdata);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
 
     }
 
 
-    }
+}
 

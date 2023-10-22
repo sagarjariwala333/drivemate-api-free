@@ -91,5 +91,18 @@ namespace DriveMate.Controllers
             }
         }
 
+        [HttpGet(Name = "GetReport")]
+        public async Task<JsonResponse> GetReport(Daterequest req)
+        {
+            try
+            {
+                return await _adminService.GetReport(req.date);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResponse(200, true, "Fail", ex.Message);
+            }
+        }
+
     }
 }

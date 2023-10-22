@@ -9,5 +9,7 @@ namespace DriveMate.Interfaces
         public Task<JsonResponse> GetTripsById(Guid Id);
         public Task<JsonResponse> GetAllUsers(string filterOn = null, string filterQuery = null, string sortBy = null, bool isAscending = true, string Role = null);
         public Task<JsonResponse> GetUserById(Guid Id);
+
+        public Task<JsonResponse> GetReport(DateTime specificDate);
     }
 }
