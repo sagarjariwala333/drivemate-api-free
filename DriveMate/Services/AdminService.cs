@@ -187,10 +187,10 @@ namespace DriveMate.Services
             try
             {
                 var startOfDay = specificDate.Date;
-                var endOfDay = specificDate.Date.AddHours(23).AddMinutes(59).AddSeconds(59); 
-
+                var endOfDay = specificDate.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+                
                 var d = await
-                        (from trip in _tripRepository.Table.Where(x => x.IsDeleted == false && x.CreatedDate >= startOfDay && x.CreatedDate <= endOfDay)
+                        (from trip in _tripRepository.Table.Where(x => x.IsDeleted == false && x.CreatedDate >= startOfDay && x.CreatedDate <= endOfDay  )
                          join
                         user in _userRepository.Table.Where(x => x.IsDeleted == false)
                         on trip.DriverId equals user.Id
@@ -200,7 +200,6 @@ namespace DriveMate.Services
                              Email = user.Email,
                              Distance = float.Parse(trip.Distance.Split()[0]),
                              Name = user.FirstName + " " + user.LastName
-
                          }).ToListAsync();
 
                 var newdata = d.GroupBy(x => x.Id)

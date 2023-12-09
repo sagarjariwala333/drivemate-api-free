@@ -91,7 +91,7 @@ namespace DriveMate.Controllers
             }
         }
 
-        [HttpGet(Name = "GetReport")]
+        [HttpPost(Name = "GetReport")]
         public async Task<JsonResponse> GetReport(Daterequest req)
         {
             try
